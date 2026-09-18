@@ -25,13 +25,13 @@
     </Grid.RowDefinitions>
 
     <StackPanel Grid.Row="0" Margin="0,0,0,16">
-      <TextBlock Text="Trascrizione audio con OpenAI Whisper"
+      <TextBlock Text="Audio transcription with OpenAI Whisper"
                  FontSize="22"
                  FontWeight="SemiBold" />
       <TextBlock Margin="0,6,0,0"
                  Foreground="#555"
                  TextWrapping="Wrap"
-                 Text="{Binding SupportedFormats, StringFormat=Formati supportati: {0}. I file oltre 25 MB vengono suddivisi automaticamente.}" />
+                 Text="{Binding SupportedFormats, StringFormat=Supported formats: {0}. Files over 25 MB are split automatically.}" />
     </StackPanel>
 
     <Grid Grid.Row="1" Margin="0,0,0,12">
@@ -46,10 +46,10 @@
                VerticalContentAlignment="Center"
                IsReadOnly="True"
                Background="White"
-               Text="{Binding SelectedFilePath, Mode=OneWay, TargetNullValue='Nessun file selezionato'}" />
+               Text="{Binding SelectedFilePath, Mode=OneWay, TargetNullValue='No file selected'}" />
 
       <Button Grid.Column="1"
-              Content="Sfoglia..."
+              Content="Browse..."
               Width="110"
               Height="36"
               Margin="8,0,0,0"
@@ -59,23 +59,23 @@
     <StackPanel Grid.Row="2"
                 Orientation="Horizontal"
                 Margin="0,0,0,12">
-      <Button Content="Trascrivere"
+      <Button Content="Transcribe"
               Width="130"
               Height="36"
               Margin="0,0,8,0"
               Command="{Binding TranscribeCommand}" />
-      <Button Content="Annulla"
+      <Button Content="Cancel"
               Width="110"
               Height="36"
               Margin="0,0,8,0"
               Command="{Binding CancelCommand}"
               Visibility="{Binding IsBusy, Converter={StaticResource BusyVisibilityConverter}}" />
-      <Button Content="Salva testo..."
+      <Button Content="Save text..."
               Width="130"
               Height="36"
               Margin="0,0,8,0"
               Command="{Binding SaveCommand}" />
-      <Button Content="Impostazioni"
+      <Button Content="Settings"
               Width="120"
               Height="36"
               Command="{Binding OpenSettingsCommand}" />
@@ -105,11 +105,11 @@
                        Width="220"
                        Height="6"
                        Margin="0,0,0,16" />
-          <TextBlock Text="Trascrizione in corso..."
+          <TextBlock Text="Transcription in progress..."
                      HorizontalAlignment="Center"
                      FontSize="16"
                      FontWeight="SemiBold" />
-          <TextBlock Text="Attendi, l'operazione puo richiedere alcuni minuti."
+          <TextBlock Text="This may take a few minutes."
                      HorizontalAlignment="Center"
                      Margin="0,8,0,0"
                      Foreground="#666" />

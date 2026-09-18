@@ -33,13 +33,13 @@ public sealed class SettingsViewModel : ViewModelBase
 
     if (string.IsNullOrWhiteSpace(ApiKey))
     {
-      ErrorMessage = "Inserisci una chiave API OpenAI valida.";
+      ErrorMessage = "Enter a valid OpenAI API key.";
       return false;
     }
 
     if (!ApiKey.StartsWith("sk-", StringComparison.Ordinal))
     {
-      ErrorMessage = "La chiave API non sembra valida. Le chiavi OpenAI iniziano di solito con \"sk-\".";
+      ErrorMessage = "The API key does not look valid. OpenAI keys usually start with \"sk-\".";
       return false;
     }
 
@@ -50,7 +50,7 @@ public sealed class SettingsViewModel : ViewModelBase
     }
     catch (Exception ex)
     {
-      ErrorMessage = $"Impossibile salvare le impostazioni: {ex.Message}";
+      ErrorMessage = $"Could not save settings: {ex.Message}";
       return false;
     }
   }

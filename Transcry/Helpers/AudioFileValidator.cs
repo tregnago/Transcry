@@ -24,13 +24,13 @@ public static class AudioFileValidator
 
     if (string.IsNullOrWhiteSpace(filePath))
     {
-      errorMessage = "Seleziona un file audio prima di procedere.";
+      errorMessage = "Select an audio file before continuing.";
       return false;
     }
 
     if (!File.Exists(filePath))
     {
-      errorMessage = "Il file selezionato non esiste o non è più accessibile.";
+      errorMessage = "The selected file does not exist or is no longer accessible.";
       return false;
     }
 
@@ -38,9 +38,9 @@ public static class AudioFileValidator
     if (string.IsNullOrEmpty(extension) || !SupportedExtensions.Contains(extension))
     {
       errorMessage =
-        $"Formato non supportato ({extension.TrimStart('.')}). " +
-        $"Whisper accetta solo: {SupportedFormatsDescription}. " +
-        "I file .wma non sono supportati: convertili prima in mp3 o wav.";
+        $"Unsupported format ({extension.TrimStart('.')}). " +
+        $"Whisper only accepts: {SupportedFormatsDescription}. " +
+        ".wma files are not supported: convert them to mp3 or wav first.";
       return false;
     }
 
@@ -49,13 +49,13 @@ public static class AudioFileValidator
       var fileInfo = new FileInfo(filePath);
       if (fileInfo.Length == 0)
       {
-        errorMessage = "Il file audio è vuoto.";
+        errorMessage = "The audio file is empty.";
         return false;
       }
     }
     catch (Exception ex)
     {
-      errorMessage = $"Impossibile leggere il file: {ex.Message}";
+      errorMessage = $"Could not read the file: {ex.Message}";
       return false;
     }
 

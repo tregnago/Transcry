@@ -9,10 +9,10 @@ namespace Transcry.Services;
 public static class ErrorMessageMapper
 {
   public const string RateLimitMessage =
-    "Troppe richieste in poco tempo. Attendi qualche minuto e riprova.";
+    "Too many requests in a short time. Wait a few minutes and try again.";
 
   public const string QuotaExhaustedMessage =
-    "Quota o credito OpenAI esaurito. Apri platform.openai.com, controlla Fatturazione e Usage, poi ricarica il credito o alza il limite di spesa. Attendere non risolve questo errore.";
+    "OpenAI quota or credit is exhausted. Open platform.openai.com, check Billing and Usage, then add credit or raise the spending limit. Waiting will not fix this error.";
 
   public static string FromTooManyRequests(string? details)
   {
@@ -30,7 +30,7 @@ public static class ErrorMessageMapper
 
     if (exception is OperationCanceledException)
     {
-      return "Trascrizione annullata.";
+      return "Transcription cancelled.";
     }
 
     if (exception is HttpRequestException httpException)
@@ -40,20 +40,20 @@ public static class ErrorMessageMapper
 
     if (exception is SocketException)
     {
-      return "Connessione di rete non disponibile. Verifica la connessione Internet e riprova.";
+      return "No network connection. Check your Internet connection and try again.";
     }
 
     if (exception is UnauthorizedAccessException)
     {
-      return "Accesso negato al file. Verifica i permessi o scegli un'altra cartella.";
+      return "Access to the file was denied. Check permissions or choose another folder.";
     }
 
     if (exception is IOException ioException)
     {
-      return $"Errore di lettura/scrittura del file: {ioException.Message}";
+      return $"File read/write error: {ioException.Message}";
     }
 
-    return $"Si è verificato un errore imprevisto: {exception.Message}";
+    return $"An unexpected error occurred: {exception.Message}";
   }
 
   private static string MapHttpException(HttpRequestException exception)
@@ -73,21 +73,21 @@ public static class ErrorMessageMapper
     return statusCode switch
     {
       HttpStatusCode.Unauthorized =>
-        "Chiave API non valida o scaduta. Controlla le impostazioni e riprova.",
+        "Invalid or expired API key. Check Settings and try again.",
       HttpStatusCode.Forbidden =>
-        "Accesso negato al servizio OpenAI. Verifica i permessi del tuo account.",
+        "Access to the OpenAI service was denied. Check your account permissions.",
       HttpStatusCode.TooManyRequests =>
         RateLimitMessage,
       HttpStatusCode.BadRequest =>
-        "Richiesta non valida. Verifica il file audio e riprova.",
+        "Invalid request. Check the audio file and try again.",
       HttpStatusCode.RequestEntityTooLarge =>
-        "Il file è troppo grande per il servizio Whisper (massimo 25 MB).",
+        "The file is too large for Whisper (25 MB maximum).",
       HttpStatusCode.InternalServerError or HttpStatusCode.BadGateway or HttpStatusCode.ServiceUnavailable or HttpStatusCode.GatewayTimeout =>
-        "Il servizio OpenAI non è momentaneamente disponibile. Riprova tra poco.",
+        "The OpenAI service is temporarily unavailable. Try again shortly.",
       null =>
-        "Impossibile contattare il servizio OpenAI. Verifica la connessione Internet.",
+        "Could not reach the OpenAI service. Check your Internet connection.",
       _ =>
-        $"Errore dal servizio OpenAI ({(int)statusCode}): {exception.Message}"
+        $"OpenAI service error ({(int)statusCode}): {exception.Message}"
     };
   }
 
@@ -96,7 +96,7 @@ public static class ErrorMessageMapper
     if (apiMessage.Contains("invalid_api_key", StringComparison.OrdinalIgnoreCase) ||
         apiMessage.Contains("Incorrect API key", StringComparison.OrdinalIgnoreCase))
     {
-      return "Chiave API non valida. Controlla le impostazioni e riprova.";
+      return "Invalid API key. Check Settings and try again.";
     }
 
     if (LooksLikeQuotaExhausted(apiMessage))

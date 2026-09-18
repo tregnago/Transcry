@@ -70,7 +70,7 @@ public sealed class AudioChunkSession : IDisposable
     var totalTime = probeReader.TotalTime;
     if (totalTime <= TimeSpan.Zero)
     {
-      throw new InvalidOperationException("Impossibile determinare la durata del file audio.");
+      throw new InvalidOperationException("Could not determine the audio file duration.");
     }
 
     var maxChunkDuration = GetMaxChunkDuration();
@@ -104,7 +104,7 @@ public sealed class AudioChunkSession : IDisposable
 
     if (chunks.Count == 0)
     {
-      throw new InvalidOperationException("Nessuna parte audio generata dal file selezionato.");
+      throw new InvalidOperationException("No audio parts were generated from the selected file.");
     }
 
     return chunks;
@@ -137,13 +137,13 @@ public sealed class AudioChunkSession : IDisposable
     if (fileInfo.Length < 1024)
     {
       throw new InvalidOperationException(
-        $"La parte {chunkIndex + 1} generata e' vuota o troppo piccola per essere trascritta.");
+        $"Part {chunkIndex + 1} is empty or too small to transcribe.");
     }
 
     if (fileInfo.Length > MaxChunkSizeBytes)
     {
       throw new InvalidOperationException(
-        $"La parte {chunkIndex + 1} supera ancora il limite di 25 MB dopo la preparazione.");
+        $"Part {chunkIndex + 1} still exceeds the 25 MB limit after preparation.");
     }
 
     try
@@ -152,7 +152,7 @@ public sealed class AudioChunkSession : IDisposable
       if (reader.TotalTime < TimeSpan.FromMilliseconds(500))
       {
         throw new InvalidOperationException(
-          $"La parte {chunkIndex + 1} non contiene abbastanza audio.");
+          $"Part {chunkIndex + 1} does not contain enough audio.");
       }
     }
     catch (InvalidOperationException)
@@ -162,7 +162,7 @@ public sealed class AudioChunkSession : IDisposable
     catch (Exception ex)
     {
       throw new InvalidOperationException(
-        $"La parte {chunkIndex + 1} non e' un file audio valido.", ex);
+        $"Part {chunkIndex + 1} is not a valid audio file.", ex);
     }
   }
 

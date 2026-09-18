@@ -52,7 +52,7 @@ public sealed class SettingsService : ISettingsService
     catch (Exception ex)
     {
       throw new InvalidOperationException(
-        "Impossibile leggere le impostazioni salvate. Il file potrebbe essere danneggiato.",
+        "Could not read the saved settings. The file may be damaged.",
         ex);
     }
   }

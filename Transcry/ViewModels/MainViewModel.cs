@@ -13,7 +13,7 @@ public sealed class MainViewModel : ViewModelBase
 
   private string? _selectedFilePath;
   private string _transcriptionText = string.Empty;
-  private string _statusMessage = "Seleziona un file audio e avvia la trascrizione.";
+  private string _statusMessage = "Select an audio file and start transcription.";
   private string? _errorMessage;
   private bool _isBusy;
   private bool _hasTranscription;
@@ -44,7 +44,7 @@ public sealed class MainViewModel : ViewModelBase
         }
 
         StatusMessage = string.IsNullOrWhiteSpace(value)
-          ? "Seleziona un file audio e avvia la trascrizione."
+          ? "Select an audio file and start transcription."
           : BuildSelectedFileStatus(value);
         RaiseCommandStates();
       }
@@ -111,10 +111,10 @@ public sealed class MainViewModel : ViewModelBase
   {
     var dialog = new OpenFileDialog
     {
-      Title = "Seleziona file audio",
+      Title = "Select audio file",
       Filter =
-        "Audio supportati|*.mp3;*.mp4;*.mpeg;*.mpga;*.m4a;*.wav;*.webm|" +
-        "Tutti i file|*.*"
+        "Supported audio|*.mp3;*.mp4;*.mpeg;*.mpga;*.m4a;*.wav;*.webm|" +
+        "All files|*.*"
     };
 
     if (dialog.ShowDialog() == true)
@@ -130,14 +130,14 @@ public sealed class MainViewModel : ViewModelBase
 
     if (!_settingsService.HasApiKey)
     {
-      ErrorMessage = "Chiave API non configurata. Apri Impostazioni e inserisci la tua chiave OpenAI.";
+      ErrorMessage = "API key is not configured. Open Settings and enter your OpenAI key.";
       OpenSettings();
       return;
     }
 
     if (string.IsNullOrWhiteSpace(SelectedFilePath))
     {
-      ErrorMessage = "Seleziona un file audio prima di procedere.";
+      ErrorMessage = "Select an audio file before continuing.";
       return;
     }
 
@@ -149,7 +149,7 @@ public sealed class MainViewModel : ViewModelBase
 
     _transcriptionCts = new CancellationTokenSource();
     IsBusy = true;
-    StatusMessage = "Trascrizione in corso… attendi, potrebbe richiedere alcuni minuti.";
+    StatusMessage = "Transcription in progress… this may take a few minutes.";
 
     try
     {
@@ -162,16 +162,16 @@ public sealed class MainViewModel : ViewModelBase
         progress).ConfigureAwait(true);
 
       TranscriptionText = result;
-      StatusMessage = "Trascrizione completata. Puoi salvare il testo in un file.";
+      StatusMessage = "Transcription complete. You can save the text to a file.";
     }
     catch (OperationCanceledException)
     {
-      StatusMessage = "Trascrizione annullata.";
-      ErrorMessage = "Operazione annullata dall'utente.";
+      StatusMessage = "Transcription cancelled.";
+      ErrorMessage = "Operation cancelled by the user.";
     }
     catch (Exception ex)
     {
-      StatusMessage = "Trascrizione non riuscita.";
+      StatusMessage = "Transcription failed.";
       ErrorMessage = ErrorMessageMapper.ToUserMessage(ex);
     }
     finally
@@ -185,7 +185,7 @@ public sealed class MainViewModel : ViewModelBase
   private void CancelTranscription()
   {
     _transcriptionCts?.Cancel();
-    StatusMessage = "Annullamento in corso…";
+    StatusMessage = "Cancelling…";
   }
 
   private void SaveTranscription()
@@ -194,18 +194,18 @@ public sealed class MainViewModel : ViewModelBase
 
     if (!HasTranscription)
     {
-      ErrorMessage = "Non c'è nulla da salvare. Esegui prima una trascrizione.";
+      ErrorMessage = "There is nothing to save. Run a transcription first.";
       return;
     }
 
     var defaultName = string.IsNullOrWhiteSpace(SelectedFilePath)
-      ? "trascrizione.txt"
-      : $"{Path.GetFileNameWithoutExtension(SelectedFilePath)}_trascrizione.txt";
+      ? "transcription.txt"
+      : $"{Path.GetFileNameWithoutExtension(SelectedFilePath)}_transcription.txt";
 
     var dialog = new SaveFileDialog
     {
-      Title = "Salva trascrizione",
-      Filter = "File di testo|*.txt|Tutti i file|*.*",
+      Title = "Save transcription",
+      Filter = "Text files|*.txt|All files|*.*",
       FileName = defaultName,
       DefaultExt = ".txt"
     };
@@ -218,11 +218,11 @@ public sealed class MainViewModel : ViewModelBase
     try
     {
       File.WriteAllText(dialog.FileName, TranscriptionText);
-      StatusMessage = $"Trascrizione salvata in: {dialog.FileName}";
+      StatusMessage = $"Transcription saved to: {dialog.FileName}";
     }
     catch (Exception ex)
     {
-      ErrorMessage = $"Impossibile salvare il file: {ex.Message}";
+      ErrorMessage = $"Could not save the file: {ex.Message}";
     }
   }
 
@@ -236,8 +236,8 @@ public sealed class MainViewModel : ViewModelBase
     if (window.ShowDialog() == true)
     {
       StatusMessage = _settingsService.HasApiKey
-        ? "Chiave API salvata correttamente."
-        : "Configura la chiave API per usare il servizio Whisper.";
+        ? "API key saved."
+        : "Configure the API key to use the Whisper service.";
     }
   }
 
@@ -246,11 +246,11 @@ public sealed class MainViewModel : ViewModelBase
     var fileName = Path.GetFileName(filePath);
     if (!AudioFileValidator.ExceedsWhisperLimit(filePath))
     {
-      return $"File selezionato: {fileName}";
+      return $"Selected file: {fileName}";
     }
 
     var sizeMb = AudioFileValidator.GetFileSizeMegabytes(filePath);
-    return $"File selezionato: {fileName} ({sizeMb:F1} MB) — verrà suddiviso automaticamente.";
+    return $"Selected file: {fileName} ({sizeMb:F1} MB) — it will be split automatically.";
   }
 
   private void RaiseCommandStates()

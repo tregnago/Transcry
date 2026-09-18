@@ -10,7 +10,7 @@
     <AssemblyName>Transcry</AssemblyName>
     <RootNamespace>Transcry</RootNamespace>
     <Product>Transcry</Product>
-    <Description>Trascrizione audio con OpenAI Whisper</Description>
+    <Description>Audio transcription with OpenAI Whisper</Description>
     <Version>1.0.0</Version>
   </PropertyGroup>
 

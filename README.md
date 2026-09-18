@@ -1,51 +1,51 @@
 # Transcry
 
-Software Windows per trascrivere file audio con l'API **Whisper** di OpenAI.
+Windows software to transcribe audio files with the OpenAI **Whisper** API.
 
-## Requisiti
+## Requirements
 
 - Windows 10/11
 - [.NET 8 SDK](https://dotnet.microsoft.com/download/dotnet/8.0)
-- Chiave API OpenAI con accesso all'API audio
+- An OpenAI API key with access to the audio API
 
-## Avvio
+## Getting started
 
 ```bash
 cd Transcry
 dotnet run
 ```
 
-Per creare un eseguibile:
+To build an executable:
 
 ```bash
 dotnet publish Transcry/Transcry.csproj -c Release -r win-x64 --self-contained false
 ```
 
-L'eseguibile si trova in `Transcry/bin/Release/net8.0-windows/win-x64/publish/`.
+The executable is written to `Transcry/bin/Release/net8.0-windows/win-x64/publish/`.
 
-## Utilizzo
+## Usage
 
-1. Apri **Impostazioni** e inserisci la tua chiave API OpenAI (inizia con `sk-`).
-2. Clicca **Sfoglia…** e seleziona un file audio.
-3. Clicca **Trascrivere** e attendi il completamento.
-4. Clicca **Salva testo…** per esportare la trascrizione in un file `.txt`.
+1. Open **Settings** and enter your OpenAI API key (it starts with `sk-`).
+2. Click **Browse...** and select an audio file.
+3. Click **Transcribe** and wait for the result.
+4. Click **Save text...** to export the transcript as a `.txt` file.
 
-## Formati supportati
+## Supported formats
 
-Whisper accetta: **mp3, mp4, mpeg, mpga, m4a, wav, webm**.
+Whisper accepts: **mp3, mp4, mpeg, mpga, m4a, wav, webm**.
 
-L'API ha un limite di **25 MB per richiesta**. Transcry suddivide automaticamente i file più grandi convertendoli in parti **WAV 16 kHz mono** sotto il limite, le trascrive e ricompone il testo.
+The API has a **25 MB per request** limit. Transcry automatically splits larger files into **16 kHz mono WAV** chunks under that limit, transcribes them, and joins the text.
 
-## Test
+## Tests
 
 ```bash
 dotnet test Transcry.Tests/Transcry.Tests.csproj --filter AudioChunkSession
 ```
 
-I test di integrazione sui file grandi sono opzionali: copia gli MP3 in `Transcry.Tests/local-samples/` oppure imposta la variabile d'ambiente `TRANSCRY_TEST_AUDIO_DIR`. Quella cartella è esclusa da git.
+Integration tests on large files are optional: copy MP3 files into `Transcry.Tests/local-samples/` or set the `TRANSCRY_TEST_AUDIO_DIR` environment variable. That folder is excluded from git.
 
-> I file **.wma** non sono supportati dall'API Whisper. Convertili prima in mp3 o wav.
+> **.wma** files are not supported by the Whisper API. Convert them to mp3 or wav first.
 
-## Sicurezza
+## Security
 
-La chiave API viene salvata solo in `%AppData%\Transcry\settings.json`, crittografata con **DPAPI** (protezione a livello utente Windows). Non viene mai copiata nel repository git.
+The API key is stored only in `%AppData%\Transcry\settings.json`, encrypted with **DPAPI** (Windows per-user protection). It is never committed to git.

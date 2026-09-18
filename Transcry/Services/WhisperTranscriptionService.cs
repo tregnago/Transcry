@@ -18,7 +18,7 @@ public sealed class WhisperTranscriptionService : ITranscriptionService
     if (string.IsNullOrWhiteSpace(apiKey))
     {
       throw new TranscriptionException(
-        "Chiave API non configurata. Apri Impostazioni e inserisci la tua chiave OpenAI.");
+        "API key is not configured. Open Settings and enter your OpenAI key.");
     }
 
     if (!AudioFileValidator.TryValidate(audioFilePath, out var validationError))
@@ -29,8 +29,8 @@ public sealed class WhisperTranscriptionService : ITranscriptionService
     if (AudioFileValidator.ExceedsWhisperLimit(audioFilePath))
     {
       progress?.Report(
-        $"Preparazione del file ({AudioFileValidator.GetFileSizeMegabytes(audioFilePath):F1} MB): " +
-        "conversione e suddivisione in parti WAV... puo richiedere circa 1 minuto.");
+        $"Preparing the file ({AudioFileValidator.GetFileSizeMegabytes(audioFilePath):F1} MB): " +
+        "converting and splitting into WAV parts... this can take about 1 minute.");
     }
 
     AudioChunkSession chunkSession;
@@ -45,7 +45,7 @@ public sealed class WhisperTranscriptionService : ITranscriptionService
     catch (Exception ex)
     {
       throw new TranscriptionException(
-        $"Impossibile preparare il file audio per la trascrizione: {ex.Message}", ex);
+        $"Could not prepare the audio file for transcription: {ex.Message}", ex);
     }
 
     using (chunkSession)
@@ -55,8 +55,8 @@ public sealed class WhisperTranscriptionService : ITranscriptionService
       if (chunkSession.WasSplit)
       {
         progress?.Report(
-          $"File grande ({AudioFileValidator.GetFileSizeMegabytes(audioFilePath):F1} MB): " +
-          $"suddivisione in {chunks.Count} parti per Whisper...");
+          $"Large file ({AudioFileValidator.GetFileSizeMegabytes(audioFilePath):F1} MB): " +
+          $"splitting into {chunks.Count} parts for Whisper...");
       }
 
       var transcriptParts = new List<string>(chunks.Count);
@@ -67,7 +67,7 @@ public sealed class WhisperTranscriptionService : ITranscriptionService
 
         if (chunks.Count > 1)
         {
-          progress?.Report($"Trascrizione parte {index + 1} di {chunks.Count}...");
+          progress?.Report($"Transcribing part {index + 1} of {chunks.Count}...");
         }
 
         var part = await TranscribeSingleFileAsync(
@@ -84,7 +84,7 @@ public sealed class WhisperTranscriptionService : ITranscriptionService
       if (string.IsNullOrWhiteSpace(fullTranscript))
       {
         throw new TranscriptionException(
-          "La trascrizione è vuota. Il file potrebbe non contenere parlato riconoscibile.");
+          "The transcription is empty. The file may not contain recognizable speech.");
       }
 
       return fullTranscript;
@@ -117,7 +117,7 @@ public sealed class WhisperTranscriptionService : ITranscriptionService
       if (string.IsNullOrWhiteSpace(transcription.Text))
       {
         throw new TranscriptionException(
-          "La trascrizione è vuota. Il file potrebbe non contenere parlato riconoscibile.");
+          "The transcription is empty. The file may not contain recognizable speech.");
       }
 
       return transcription.Text.Trim();
@@ -134,16 +134,16 @@ public sealed class WhisperTranscriptionService : ITranscriptionService
                                              ex.Message.Contains("whisper", StringComparison.OrdinalIgnoreCase))
     {
       throw new TranscriptionException(
-        "Il progetto OpenAI collegato alla tua chiave API non ha accesso a whisper-1. " +
-        "Vai su platform.openai.com ? seleziona lo stesso progetto della chiave ? Impostazioni ? Limiti: " +
-        "verifica che whisper-1 non sia bloccato e che sia tra i modelli consentiti. " +
-        "Se la chiave e' limitata (sk-proj-...), crea una nuova chiave dopo aver abilitato whisper-1.",
+        "The OpenAI project linked to your API key does not have access to whisper-1. " +
+        "Go to platform.openai.com, select the same project as the key, then Settings > Limits: " +
+        "make sure whisper-1 is not blocked and is among the allowed models. " +
+        "If the key is project-limited (sk-proj-...), create a new key after enabling whisper-1.",
         ex);
     }
     catch (ClientResultException ex) when (ex.Status == (int)HttpStatusCode.Unauthorized)
     {
       throw new TranscriptionException(
-        "Chiave API non valida o scaduta. Controlla le impostazioni e riprova.", ex);
+        "Invalid or expired API key. Check Settings and try again.", ex);
     }
     catch (ClientResultException ex) when (ex.Status == (int)HttpStatusCode.TooManyRequests)
     {
@@ -156,7 +156,7 @@ public sealed class WhisperTranscriptionService : ITranscriptionService
         BuildPartErrorMessage(
           partNumber,
           partCount,
-          "supera il limite di 25 MB. Prova a comprimere il file audio prima della trascrizione."),
+          "exceeds the 25 MB limit. Try compressing the audio file before transcription."),
         ex);
     }
     catch (ClientResultException ex) when (ex.Status == (int)HttpStatusCode.BadRequest &&
@@ -166,19 +166,19 @@ public sealed class WhisperTranscriptionService : ITranscriptionService
         BuildPartErrorMessage(
           partNumber,
           partCount,
-          "non puo essere decodificata da Whisper. Il file originale potrebbe essere danneggiato o in un formato non standard."),
+          "cannot be decoded by Whisper. The original file may be damaged or in a non-standard format."),
         ex);
     }
     catch (ClientResultException ex) when (ex.Status >= 500)
     {
       throw new TranscriptionException(
-        "Il servizio OpenAI non è momentaneamente disponibile. Riprova tra poco.", ex);
+        "The OpenAI service is temporarily unavailable. Try again shortly.", ex);
     }
     catch (ClientResultException ex)
     {
       throw new TranscriptionException(
         string.IsNullOrWhiteSpace(ex.Message)
-          ? "Errore dal servizio OpenAI durante la trascrizione."
+          ? "An error occurred from the OpenAI service during transcription."
           : ex.Message,
         ex);
     }
@@ -221,6 +221,6 @@ public sealed class WhisperTranscriptionService : ITranscriptionService
       return detail;
     }
 
-    return $"Errore sulla parte {partNumber} di {partCount}: {detail}";
+    return $"Error on part {partNumber} of {partCount}: {detail}";
   }
 }
