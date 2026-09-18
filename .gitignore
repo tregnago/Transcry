@@ -1,0 +1,39 @@
+## Build
+bin/
+obj/
+publish/
+artifacts/
+TestResults/
+*.cache
+*.log
+
+## Visual Studio / IDEs
+.vs/
+.idea/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+## Secrets and local machine settings
+.env
+.env.*
+*.pfx
+*.snk
+settings.json
+
+## Local audio (may contain personal recordings)
+Transcry.Tests/local-samples/
+*.mp3
+*.mp4
+*.mpeg
+*.mpga
+*.m4a
+*.wav
+*.webm
+*.wma
+
+## OS
+Thumbs.db
+Desktop.ini
+.DS_Store
