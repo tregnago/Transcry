@@ -49,3 +49,7 @@ Integration tests on large files are optional: copy MP3 files into `Transcry.Tes
 ## Security
 
 The API key is stored only in `%AppData%\Transcry\settings.json`, encrypted with **DPAPI** (Windows per-user protection). It is never committed to git.
+
+## License
+
+This project is licensed under the [MIT License](LICENSE). You keep the copyright; others may use, modify, and distribute Transcry.
