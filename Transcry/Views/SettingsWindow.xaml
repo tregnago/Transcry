@@ -2,72 +2,81 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:converters="clr-namespace:Transcry.Converters"
-        Title="Settings"
-        Height="280"
-        Width="520"
-        WindowStartupLocation="CenterOwner"
-        ResizeMode="NoResize"
-        Background="#F5F5F5">
+        Title="Transcry settings"
+        Icon="../Assets/Transcry.ico"
+        Height="370" Width="550" MinHeight="370" MinWidth="550"
+        WindowStartupLocation="CenterOwner" ResizeMode="NoResize"
+        FontFamily="Segoe UI" Foreground="#202C47">
   <Window.Resources>
     <converters:StringNullOrEmptyToVisibilityConverter x:Key="ErrorVisibilityConverter" />
   </Window.Resources>
-
-  <Grid Margin="24">
-    <Grid.RowDefinitions>
-      <RowDefinition Height="Auto" />
-      <RowDefinition Height="Auto" />
-      <RowDefinition Height="Auto" />
-      <RowDefinition Height="Auto" />
-      <RowDefinition Height="*" />
-      <RowDefinition Height="Auto" />
-    </Grid.RowDefinitions>
-
-    <TextBlock Grid.Row="0"
-               Text="OpenAI API key"
-               FontSize="18"
-               FontWeight="SemiBold"
-               Margin="0,0,0,8" />
-
-    <TextBlock Grid.Row="1"
-               TextWrapping="Wrap"
-               Foreground="#555"
-               Margin="0,0,0,16"
-               Text="The key is stored locally on this PC and protected with Windows encryption (DPAPI)." />
-
-    <PasswordBox x:Name="ApiKeyBox"
-                 Grid.Row="2"
-                 Height="36"
-                 Padding="8,6"
-                 VerticalContentAlignment="Center" />
-
-    <Border Grid.Row="3"
-            Margin="0,12,0,0"
-            Padding="12"
-            Background="#FDECEC"
-            BorderBrush="#E57373"
-            BorderThickness="1"
-            CornerRadius="4"
-            Visibility="{Binding ErrorMessage, Converter={StaticResource ErrorVisibilityConverter}}">
-      <TextBlock Text="{Binding ErrorMessage}"
-                 TextWrapping="Wrap"
-                 Foreground="#B71C1C" />
-    </Border>
-
-    <StackPanel Grid.Row="5"
-                Orientation="Horizontal"
-                HorizontalAlignment="Right"
-                Margin="0,16,0,0">
-      <Button Content="Cancel"
-              Width="100"
-              Height="36"
-              Margin="0,0,8,0"
-              IsCancel="True"
-              Click="Cancel_Click" />
-      <Button Content="Save"
-              Width="100"
-              Height="36"
-              IsDefault="True"
-              Click="Save_Click" />
-    </StackPanel>
+  <Grid ClipToBounds="True">
+    <Grid.Background>
+      <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+        <GradientStop Color="#F9FBFF" Offset="0" />
+        <GradientStop Color="#EEF3FF" Offset="0.6" />
+        <GradientStop Color="#EEF9FA" Offset="1" />
+      </LinearGradientBrush>
+    </Grid.Background>
+    <Ellipse Width="360" Height="360" HorizontalAlignment="Right" VerticalAlignment="Top"
+             Margin="0,-220,-170,0" IsHitTestVisible="False">
+      <Ellipse.Fill>
+        <RadialGradientBrush>
+          <GradientStop Color="#609DAAFF" Offset="0" />
+          <GradientStop Color="#009DAAFF" Offset="1" />
+        </RadialGradientBrush>
+      </Ellipse.Fill>
+    </Ellipse>
+    <Grid Margin="26,22,26,22">
+      <Grid.RowDefinitions>
+        <RowDefinition Height="Auto" />
+        <RowDefinition Height="*" />
+      </Grid.RowDefinitions>
+      <StackPanel Orientation="Horizontal" Margin="0,0,0,18">
+        <Image Source="../Assets/Transcry.png" Width="46" Height="46" />
+        <StackPanel Margin="12,1,0,0" VerticalAlignment="Center">
+          <TextBlock Text="Settings" FontSize="22" FontWeight="Bold" />
+          <TextBlock Text="Connect Transcry to your API key"
+                     Foreground="#66748D" FontSize="12" />
+        </StackPanel>
+      </StackPanel>
+      <Border Grid.Row="1" Padding="21" Background="White" CornerRadius="18"
+              BorderBrush="#E1E8F5" BorderThickness="1">
+        <Border.Effect>
+          <DropShadowEffect Color="#7584AB" BlurRadius="20" ShadowDepth="5" Opacity="0.12" />
+        </Border.Effect>
+        <Grid>
+          <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+          </Grid.RowDefinitions>
+          <TextBlock Grid.Row="0" Text="OpenAI API key"
+                     FontSize="15" FontWeight="SemiBold" />
+          <TextBlock Grid.Row="1" Margin="0,5,0,14" TextWrapping="Wrap"
+                     Foreground="#66748D" FontSize="12"
+                     Text="The key is stored locally on this PC and protected with Windows encryption (DPAPI)." />
+          <PasswordBox x:Name="ApiKeyBox" Grid.Row="2" Height="40" Padding="10,7"
+                       VerticalContentAlignment="Center" Background="#F8FAFF"
+                       BorderBrush="#DEE5F2" FontSize="13" />
+          <Border Grid.Row="3" Margin="0,12,0,0" Padding="11,8"
+                  Background="#FFF0F0" BorderBrush="#F2C3C5"
+                  BorderThickness="1" CornerRadius="10"
+                  Visibility="{Binding ErrorMessage, Converter={StaticResource ErrorVisibilityConverter}}">
+            <TextBlock Text="{Binding ErrorMessage}" TextWrapping="Wrap" Foreground="#AE333D" />
+          </Border>
+          <StackPanel Grid.Row="4" Orientation="Horizontal"
+                      HorizontalAlignment="Right" Margin="0,16,0,0">
+            <Button Content="Cancel" Width="100" Height="38" Margin="0,0,9,0"
+                    IsCancel="True" Click="Cancel_Click" />
+            <Button Content="Save" Width="100" Height="38"
+                    Style="{StaticResource PrimaryButtonStyle}"
+                    IsDefault="True" Click="Save_Click" />
+          </StackPanel>
+        </Grid>
+      </Border>
+    </Grid>
   </Grid>
 </Window>

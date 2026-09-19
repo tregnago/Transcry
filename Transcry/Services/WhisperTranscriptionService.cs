@@ -30,7 +30,7 @@ public sealed class WhisperTranscriptionService : ITranscriptionService
     {
       progress?.Report(
         $"Preparing the file ({AudioFileValidator.GetFileSizeMegabytes(audioFilePath):F1} MB): " +
-        "converting and splitting into WAV parts... this can take about 1 minute.");
+        "converting and splitting into WAV parts. Duration depends on the file size, format, and storage speed.");
     }
 
     AudioChunkSession chunkSession;
@@ -55,8 +55,7 @@ public sealed class WhisperTranscriptionService : ITranscriptionService
       if (chunkSession.WasSplit)
       {
         progress?.Report(
-          $"Large file ({AudioFileValidator.GetFileSizeMegabytes(audioFilePath):F1} MB): " +
-          $"splitting into {chunks.Count} parts for Whisper...");
+          $"Audio prepared in {chunks.Count} parts. Starting transcription...");
       }
 
       var transcriptParts = new List<string>(chunks.Count);

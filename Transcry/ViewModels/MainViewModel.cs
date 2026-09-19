@@ -18,6 +18,8 @@ public sealed class MainViewModel : ViewModelBase
   private bool _isBusy;
   private bool _hasTranscription;
 
+  public event EventHandler? TranscriptionCompleted;
+
   public MainViewModel(ISettingsService settingsService, ITranscriptionService transcriptionService)
   {
     _settingsService = settingsService;
@@ -135,13 +137,14 @@ public sealed class MainViewModel : ViewModelBase
       return;
     }
 
-    if (string.IsNullOrWhiteSpace(SelectedFilePath))
+    var selectedFilePath = SelectedFilePath;
+    if (string.IsNullOrWhiteSpace(selectedFilePath))
     {
       ErrorMessage = "Select an audio file before continuing.";
       return;
     }
 
-    if (!AudioFileValidator.TryValidate(SelectedFilePath, out var validationError))
+    if (!AudioFileValidator.TryValidate(selectedFilePath, out var validationError))
     {
       ErrorMessage = validationError;
       return;
@@ -149,20 +152,32 @@ public sealed class MainViewModel : ViewModelBase
 
     _transcriptionCts = new CancellationTokenSource();
     IsBusy = true;
-    StatusMessage = "Transcription in progress… this may take a few minutes.";
+    StatusMessage = "Transcription in progress. Please wait...";
+
+    var completed = false;
 
     try
     {
       var settings = _settingsService.Load();
-      var progress = new Progress<string>(message => StatusMessage = message);
-      var result = await _transcriptionService.TranscribeAsync(
-        SelectedFilePath,
-        settings.ApiKey!,
-        _transcriptionCts.Token,
-        progress).ConfigureAwait(true);
+      var cancellationToken = _transcriptionCts.Token;
+      var progress = new Progress<string>(message =>
+      {
+        if (IsBusy && !cancellationToken.IsCancellationRequested)
+        {
+          StatusMessage = message;
+        }
+      });
+      var result = await Task.Run(
+        () => _transcriptionService.TranscribeAsync(
+          selectedFilePath,
+          settings.ApiKey!,
+          cancellationToken,
+          progress),
+        cancellationToken).ConfigureAwait(true);
 
       TranscriptionText = result;
       StatusMessage = "Transcription complete. You can save the text to a file.";
+      completed = HasTranscription;
     }
     catch (OperationCanceledException)
     {
@@ -180,12 +195,17 @@ public sealed class MainViewModel : ViewModelBase
       _transcriptionCts = null;
       IsBusy = false;
     }
+
+    if (completed)
+    {
+      TranscriptionCompleted?.Invoke(this, EventArgs.Empty);
+    }
   }
 
   private void CancelTranscription()
   {
     _transcriptionCts?.Cancel();
-    StatusMessage = "Cancelling…";
+    StatusMessage = "Cancelling...";
   }
 
   private void SaveTranscription()
@@ -250,7 +270,7 @@ public sealed class MainViewModel : ViewModelBase
     }
 
     var sizeMb = AudioFileValidator.GetFileSizeMegabytes(filePath);
-    return $"Selected file: {fileName} ({sizeMb:F1} MB) — it will be split automatically.";
+    return $"Selected file: {fileName} ({sizeMb:F1} MB) â€” it will be split automatically.";
   }
 
   private void RaiseCommandStates()

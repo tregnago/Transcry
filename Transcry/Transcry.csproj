@@ -6,7 +6,7 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <UseWPF>true</UseWPF>
-    <ApplicationIcon />
+    <ApplicationIcon>Assets\Transcry.ico</ApplicationIcon>
     <AssemblyName>Transcry</AssemblyName>
     <RootNamespace>Transcry</RootNamespace>
     <Product>Transcry</Product>
@@ -20,6 +20,11 @@
   <ItemGroup>
     <PackageReference Include="NAudio" Version="2.3.0" />
     <PackageReference Include="OpenAI" Version="2.11.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Assets\Transcry.ico" />
+    <Resource Include="Assets\Transcry.png" />
   </ItemGroup>
 
 </Project>

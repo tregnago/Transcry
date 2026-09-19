@@ -4,8 +4,45 @@
              StartupUri="MainWindow.xaml">
   <Application.Resources>
     <Style TargetType="Button">
-      <Setter Property="Padding" Value="12,6" />
+      <Setter Property="Padding" Value="16,8" />
       <Setter Property="Cursor" Value="Hand" />
+      <Setter Property="FontFamily" Value="Segoe UI" />
+      <Setter Property="FontSize" Value="13" />
+      <Setter Property="FontWeight" Value="SemiBold" />
+      <Setter Property="Foreground" Value="#263653" />
+      <Setter Property="Background" Value="#FFFFFF" />
+      <Setter Property="BorderBrush" Value="#DCE4F2" />
+      <Setter Property="BorderThickness" Value="1" />
+      <Setter Property="Template">
+        <Setter.Value>
+          <ControlTemplate TargetType="Button">
+            <Border Background="{TemplateBinding Background}"
+                    BorderBrush="{TemplateBinding BorderBrush}"
+                    BorderThickness="{TemplateBinding BorderThickness}"
+                    CornerRadius="10">
+              <ContentPresenter HorizontalAlignment="Center"
+                                VerticalAlignment="Center"
+                                Margin="{TemplateBinding Padding}" />
+            </Border>
+            <ControlTemplate.Triggers>
+              <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Opacity" Value="0.84" />
+              </Trigger>
+              <Trigger Property="IsPressed" Value="True">
+                <Setter Property="Opacity" Value="0.68" />
+              </Trigger>
+              <Trigger Property="IsEnabled" Value="False">
+                <Setter Property="Opacity" Value="0.48" />
+              </Trigger>
+            </ControlTemplate.Triggers>
+          </ControlTemplate>
+        </Setter.Value>
+      </Setter>
+    </Style>
+    <Style x:Key="PrimaryButtonStyle" TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
+      <Setter Property="Background" Value="#4C59D8" />
+      <Setter Property="BorderBrush" Value="#4C59D8" />
+      <Setter Property="Foreground" Value="White" />
     </Style>
   </Application.Resources>
 </Application>
